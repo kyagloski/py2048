@@ -1,4 +1,3 @@
-
 #2048 - Automator
 
 from pynput.keyboard import Key, Controller
