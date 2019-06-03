@@ -37,23 +37,27 @@ coordsdict = {"topCornerLeft":[480, 180],
 
 #dicitonary of all colors of different square values
 #  key=numbervalue : value=RGBvalueofcolor
-colorsdict = {"empty":[205, 193, 180],
-              "2":[238, 228, 218],
-	      	  "4":[237, 224, 200],
-	      	  "8":[242, 177, 121],
-	      	  "16":[245, 149, 99],
-			  "32":[246, 124, 95],
-			  "64":[246, 94, 59],
-			  "128":[237, 207, 114],
-			  "256":[237, 204, 97],
-			  "512":[]
+colorsdict = {"empty":195.3,
+              "2":230.0,
+	      	  "4":225.5,
+	      	  "8":190.9,
+	      	  "16":172.7,
+			  "32":157.7,
+			  "64":136.1,
+			  "128":206.7,
+			  "256":203.2,
+			  "512":199.1,
+			  "1024":195.6,
+			  "2048":1
 			  }
 
 #prints out formatted color value of each square
 def coordsColorPrintOut():
+	
 	for i in coordsdict:
 		print("______________________________________________\n")
 		print(i)
+		print("Greyscale Value : ")
 		print(pixelAt(coordsdict.get(i)[0], coordsdict.get(i)[1]))	
 
 #presses key
@@ -86,24 +90,17 @@ def randomOptimalMoveSet():
 			pressKey(optkeylst[idx])
 
 #gets pixel at coordinate 
-#returns array of r, g, b color values 
+#returns array of r, g, b color values
+#   0.3r +  0.6g +  0.1b = grey 
 def pixelAt(x, y):
 	w = gtk.gdk.get_default_root_window()
 	sz = w.get_size()
 	pb = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB,False,8,sz[0],sz[1])
 	pb = pb.get_from_drawable(w,w.get_colormap(),0,0,0,0,sz[0],sz[1])
 	pixel_array = pb.get_pixels_array()
-	return pixel_array[y][x]	
-
-#Eventually implement threading to observe pixel colors
-'''
-def thread_function(x, y):
-	return 0	
-
-def pixelObservers():
-	thread = threading.Thread(target=thread_function, args=(1,))
-	thread.start()
-'''
+	rgb = pixel_array[y][x]	
+	grey = (0.3 * rgb[0]) + (0.6 * rgb[1]) + (0.1 * rgb[2])
+	return grey
 
 #presses keys ctrl + w to close the tab of the browser
 def killBrowser():
@@ -114,17 +111,18 @@ def killBrowser():
 
 #main
 def main():
-	url = "http://2048game.com/"
-	wb = webbrowser.get("google-chrome")
-	wb.open(url, 1, True)
+	#url = "http://2048game.com/"
+	#wb = webbrowser.get("google-chrome")
+	#wb.open(url, 1, True)
+	time.sleep(10)
 	kb.press(Key.f11)
 	kb.release(Key.f11)
 	time.sleep(5)
-
+	#pixelAt(coordsdict.get("topCornerLeft")[0], coordsdict.get("topCornerLeft")[1])
 	coordsColorPrintOut()
-	randomOptimalMoveSet()
+	#randomOptimalMoveSet()
 	
-	killBrowser()
+	#killBrowser()
 
 main()
 
