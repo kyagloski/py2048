@@ -48,8 +48,9 @@ colorsdict = {"empty":195.3,
 			  "256":203.2,
 			  "512":199.1,
 			  "1024":195.6,
-			  "2048":1
-			  }
+			  "2048":193.29,
+			  "4096":60.2,
+			  "8192":60.2}
 
 #prints out formatted color value of each square
 def coordsColorPrintOut():
@@ -59,6 +60,11 @@ def coordsColorPrintOut():
 		print(i)
 		print("Greyscale Value : ")
 		print(pixelAt(coordsdict.get(i)[0], coordsdict.get(i)[1]))	
+
+#ASCII GUI to view what is happening
+# on the board as text output
+def ptuiPrintOut():
+	return 0
 
 #presses key
 def pressKey(key):
@@ -74,7 +80,7 @@ def randomFullMoveSet():
 		pressKey(optkeylst[idx])
 
 #presses random keys from the optimal key set array,
-#also added extra functionality for a more optimal algorithm
+# also added extra functionality for a more optimal algorithm
 def randomOptimalMoveSet():
 	breakTime = 0.05
 	runTime = 1
@@ -90,7 +96,8 @@ def randomOptimalMoveSet():
 			pressKey(optkeylst[idx])
 
 #gets pixel at coordinate 
-#returns array of r, g, b color values
+# returns array of r, g, b color values 
+# converted to grayscale
 #   0.3r +  0.6g +  0.1b = grey 
 def pixelAt(x, y):
 	w = gtk.gdk.get_default_root_window()
@@ -111,20 +118,30 @@ def killBrowser():
 
 #main
 def main():
-	#url = "http://2048game.com/"
-	#wb = webbrowser.get("google-chrome")
-	#wb.open(url, 1, True)
+	url = "http://2048game.com/"
+	wb = webbrowser.get("google-chrome")
+	wb.open(url, 1, True)
+
 	time.sleep(10)
+
 	kb.press(Key.f11)
 	kb.release(Key.f11)
-	time.sleep(5)
-	#pixelAt(coordsdict.get("topCornerLeft")[0], coordsdict.get("topCornerLeft")[1])
-	coordsColorPrintOut()
-	#randomOptimalMoveSet()
-	
-	#killBrowser()
 
+	time.sleep(5)
+	
+	coordsColorPrintOut()
+	randomOptimalMoveSet()
+	
+	killBrowser()
+
+	#testing below
+	
+	#pixelAt(coordsdict.get("topCornerLeft")[0], coordsdict.get("topCornerLeft")[1])
+	
 main()
+
+
+
 
 
 
