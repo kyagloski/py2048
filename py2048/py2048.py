@@ -18,6 +18,7 @@ optkeylst = [Key.left, Key.down]
 
 #dictionary of all observable coords
 #  key=1/16square : value=(x, y)coordinate
+# intended use 1280x720 resolution
 coordsdict = {"topCornerLeft":[480, 180],
 			  "topMidLeft":[595, 180],
 			  "topMidRight":[700, 180],
@@ -37,20 +38,20 @@ coordsdict = {"topCornerLeft":[480, 180],
 
 #dicitonary of all colors of different square values
 #  key=numbervalue : value=RGBvalueofcolor
-colorsdict = {"empty":195.3,
-              "2":230.0,
-	      	  "4":225.5,
-	      	  "8":190.9,
-	      	  "16":172.7,
-			  "32":157.7,
-			  "64":136.1,
-			  "128":206.7,
-			  "256":203.2,
-			  "512":199.1,
-			  "1024":195.6,
-			  "2048":193.29,
-			  "4096":60.2,
-			  "8192":60.2}
+colorsdict = {"empty":195,
+              230:"2",
+	      	  226:"4",
+	      	  191:"8",
+	      	  173:"16",
+			  158:"32",
+			  136:"64",
+			  207:"128",
+			  203:"256",
+			  199:"512",
+			  197:"1024",
+			  193:"2048",
+			  60:"4096",
+			  60:"8192"}
 
 #prints out formatted color value of each square
 def coordsColorPrintOut():
@@ -60,29 +61,56 @@ def coordsColorPrintOut():
 		print("Greyscale Value : ")
 		print(pixelAt(coordsdict.get(i)[0], coordsdict.get(i)[1]))	
 
-#adds current board colors 
-def coordsColorArray():
-	colorcords = []
-	for i in coordsdict:
-		colorcords += pixelAt(coordsdict.get(i)[0], coordsdict.get(i)[1])
-	return colorcords	
-
-#ASCII GUI to view what is happening
-# on the board as text output
-def ptuiPrintOut():
-	ca = coordsColorArray()
-	currentgrid = []
-	for i in range(1, 4):
-		for j in ca:
-			currentgrid += j
-		currentgrid += '\n'		
-	return currentgrid
-		
 #presses key
 def pressKey(key):
 	kb.press(key)
 	kb.release(key)
 
+#adds current board colors 
+def coordsColorArray():
+	colorcords = []
+	for i in coordsdict:
+		colorcords.append(pixelAt(coordsdict.get(i)[0], coordsdict.get(i)[1]))
+	return colorcords	
+
+#ASCII GUI to view what is happening
+# on the board as text output
+def ptuiPrintOut():
+	count = 0
+	ca = coordsColorArray()
+	for j in range(0,3):
+		for j in range(count, len(ca)):
+			if ca[j] in colorsdict:
+				print(colorsdict.get(ca[j])),
+			else:
+				print("n/a"),
+			count += 1
+		print(" ")
+		
+#gets pixel at coordinate 
+# returns array of r, g, b color values 
+# converted to grayscale
+#   0.3r +  0.6g +  0.1b = grey 
+def pixelAt(x, y):
+	w = gtk.gdk.get_default_root_window()
+	sz = w.get_size()
+	pb = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB,False,8,sz[0],sz[1])
+	pb = pb.get_from_drawable(w,w.get_colormap(),0,0,0,0,sz[0],sz[1])
+	pixel_array = pb.get_pixels_array()
+	rgb = pixel_array[y][x]	
+	grey = (0.3 * rgb[0]) + (0.6 * rgb[1]) + (0.1 * rgb[2])
+	return round(grey)
+
+#presses keys ctrl + w to close the tab of the browser
+def killBrowser():
+	kb.press(Key.ctrl)
+	kb.press('w')
+	kb.release(Key.ctrl)
+	kb.release('w')
+
+'''
+TEST FUNCTIONS
+'''
 #presses random keys from the full key set array
 def randomFullMoveSet():
 	time.sleep(5)
@@ -107,28 +135,9 @@ def randomOptimalMoveSet():
 			idx = random.randint(0,1)
 			pressKey(optkeylst[idx])
 
-#gets pixel at coordinate 
-# returns array of r, g, b color values 
-# converted to grayscale
-#   0.3r +  0.6g +  0.1b = grey 
-def pixelAt(x, y):
-	w = gtk.gdk.get_default_root_window()
-	sz = w.get_size()
-	pb = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB,False,8,sz[0],sz[1])
-	pb = pb.get_from_drawable(w,w.get_colormap(),0,0,0,0,sz[0],sz[1])
-	pixel_array = pb.get_pixels_array()
-	rgb = pixel_array[y][x]	
-	grey = (0.3 * rgb[0]) + (0.6 * rgb[1]) + (0.1 * rgb[2])
-	return grey
-
-#presses keys ctrl + w to close the tab of the browser
-def killBrowser():
-	kb.press(Key.ctrl)
-	kb.press('w')
-	kb.release(Key.ctrl)
-	kb.release('w')
-	
-#main
+'''
+MAIN
+'''
 def main():
 	url = "http://2048game.com/"
 	wb = webbrowser.get("google-chrome")
