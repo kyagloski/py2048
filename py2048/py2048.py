@@ -54,18 +54,30 @@ colorsdict = {"empty":195.3,
 
 #prints out formatted color value of each square
 def coordsColorPrintOut():
-	
 	for i in coordsdict:
 		print("______________________________________________\n")
 		print(i)
 		print("Greyscale Value : ")
 		print(pixelAt(coordsdict.get(i)[0], coordsdict.get(i)[1]))	
 
+#adds current board colors 
+def coordsColorArray():
+	colorcords = []
+	for i in coordsdict:
+		colorcords += pixelAt(coordsdict.get(i)[0], coordsdict.get(i)[1])
+	return colorcords	
+
 #ASCII GUI to view what is happening
 # on the board as text output
 def ptuiPrintOut():
-	return 0
-
+	ca = coordsColorArray()
+	currentgrid = []
+	for i in range(1, 4):
+		for j in ca:
+			currentgrid += j
+		currentgrid += '\n'		
+	return currentgrid
+		
 #presses key
 def pressKey(key):
 	kb.press(key)
@@ -115,22 +127,23 @@ def killBrowser():
 	kb.press('w')
 	kb.release(Key.ctrl)
 	kb.release('w')
-
+	
 #main
 def main():
 	url = "http://2048game.com/"
 	wb = webbrowser.get("google-chrome")
 	wb.open(url, 1, True)
 
-	time.sleep(10)
-
 	kb.press(Key.f11)
 	kb.release(Key.f11)
 
-	time.sleep(5)
+	time.sleep(2)
+
+	print(ptuiPrintOut())
+	#time.sleep(5)
 	
-	coordsColorPrintOut()
-	randomOptimalMoveSet()
+	#coordsColorPrintOut()
+	#randomOptimalMoveSet()
 	
 	killBrowser()
 
@@ -139,10 +152,4 @@ def main():
 	#pixelAt(coordsdict.get("topCornerLeft")[0], coordsdict.get("topCornerLeft")[1])
 	
 main()
-
-
-
-
-
-
 
