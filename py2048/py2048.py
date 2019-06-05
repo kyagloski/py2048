@@ -1,12 +1,16 @@
 #2048 - Automator
 
 from pynput.keyboard import Key, Controller
+from collections import OrderedDict
 import time
 import random
 import webbrowser
 import gtk.gdk
 import sys
 
+'''
+STATE
+'''
 #keyboard
 kb = Controller()
 
@@ -19,26 +23,28 @@ optkeylst = [Key.left, Key.down]
 #dictionary of all observable coords
 #  key=1/16square : value=(x, y)coordinate
 # intended use 1280x720 resolution
-coordsdict = {"topCornerLeft":[480, 180],
-			  "topMidLeft":[595, 180],
-			  "topMidRight":[700, 180],
-			  "topCornerRight":[810, 180],
-			  "upCornerLeft":[480, 285],
-			  "upMidLeft":[595, 285],
-			  "upMidRight":[700, 285],
-			  "upCornerRight":[810, 285],
-			  "lowCornerLeft":[480, 400],
-			  "lowMidleft":[595, 400],
-			  "lowMidRight":[700, 400],
-			  "lowCornerRight":[810, 400],
-			  "bottomCornerleft":[480, 510],
-			  "bottomMidLeft":[595, 510],
-			  "bottomMidRight":[700, 510],
-			  "bottomCornerRight":[810, 510]}
+coordsdict = OrderedDict()
+
+coordsdict["topCornerLeft"] = [480, 180]
+coordsdict["topMidLeft"] = [595, 180]
+coordsdict["topMidRight"] = [700, 180]
+coordsdict["topCornerRight"] = [810, 180]
+coordsdict["upCornerLeft"] = [480, 285]
+coordsdict["upMidLeft"] = [595, 285]
+coordsdict["upMidRight"] = [700, 285]
+coordsdict["upCornerRight"] = [810, 285]
+coordsdict["lowCornerLeft"] = [480, 400]
+coordsdict["lowMidleft"] = [595, 400]
+coordsdict["lowMidRight"] = [700, 400]
+coordsdict["lowCornerRight"] = [810, 400]
+coordsdict["bottomCornerleft"] = [480, 510]
+coordsdict["bottomMidLeft"] = [595, 510]
+coordsdict["bottomMidRight"] = [700, 510]
+coordsdict["bottomCornerRight"] = [810, 510]
 
 #dicitonary of all colors of different square values
 #  key=numbervalue : value=RGBvalueofcolor
-colorsdict = {"empty":195,
+colorsdict = {195:"0",
               230:"2",
 	      	  226:"4",
 	      	  191:"8",
@@ -53,6 +59,9 @@ colorsdict = {"empty":195,
 			  60:"4096",
 			  60:"8192"}
 
+'''
+CORE FUNCTIONALITY
+'''
 #prints out formatted color value of each square
 def coordsColorPrintOut():
 	for i in coordsdict:
@@ -66,27 +75,30 @@ def pressKey(key):
 	kb.press(key)
 	kb.release(key)
 
-#adds current board colors 
-def coordsColorArray():
+#adds current board greyscale values 
+def coordsColorMatrix():
 	colorcords = []
-	for i in coordsdict:
-		colorcords.append(pixelAt(coordsdict.get(i)[0], coordsdict.get(i)[1]))
-	return colorcords	
+	idx = 0
+	for i in range(0, 4):
+		inner = []
+		for j in range(0, 4):
+			inner.append(pixelAt(coordsdict.get(coordsdict.keys()[idx])[0], coordsdict.get(coordsdict.keys()[idx])[1]))
+			idx += 1
+		colorcords.append(inner)
+	return colorcords
 
 #ASCII GUI to view what is happening
 # on the board as text output
 def ptuiPrintOut():
-	count = 0
-	ca = coordsColorArray()
-	for j in range(0,3):
-		for j in range(count, len(ca)):
-			if ca[j] in colorsdict:
-				print(colorsdict.get(ca[j])),
-			else:
-				print("n/a"),
-			count += 1
-		print(" ")
-		
+	ca = coordsColorMatrix()
+	idx = 0
+	for r in range(0, 4):
+		for c in range(0, 4):
+			print(colorsdict.get(ca[r][c])),
+			idx += 1
+		print("")
+	print("")
+
 #gets pixel at coordinate 
 # returns array of r, g, b color values 
 # converted to grayscale
@@ -109,6 +121,72 @@ def killBrowser():
 	kb.release('w')
 
 '''
+SOLVING ALGORITHMS
+'''
+def mergableTiles(matrix):
+	mergableNum = 0
+	mergableTiles = []
+	print(matrix)
+	for row in range(0, 4):
+		for col in range(0, 4):
+			try:
+				elem = matrix[row][col]
+				
+				#1 block merges
+				if elem == matrix[row+1][col] and matrix[row][col] != 195.0:
+					mergableTiles.append(matrix[row+1][col])
+					mergableNum += 1
+				if elem == matrix[row-1][col] and matrix[row][col] != 195.0:
+					mergableTiles.append(matrix[row-1][col])
+					mergableNum += 1
+				if elem == matrix[row][col+1] and matrix[row][col] != 195.0:
+					mergableTiles.append(matrix[row][col+1])
+					mergableNum += 1
+				if elem == matrix[row][col-1] and matrix[row][col] != 195.0:
+					mergableTiles.append(matrix[row][col-1])
+					mergableNum += 1
+
+				#2 block merges
+				if elem == matrix[row+2][col] and matrix[row][col] != 195.0:
+					mergableTiles.append(matrix[row+1][col])
+					mergableNum += 1
+				if elem == matrix[row-2][col] and matrix[row][col] != 195.0:
+					mergableTiles.append(matrix[row-1][col])
+					mergableNum += 1
+				if elem == matrix[row][col+2] and matrix[row][col] != 195.0:
+					mergableTiles.append(matrix[row][col+1])
+					mergableNum += 1
+				if elem == matrix[row][col-2] and matrix[row][col] != 195.0:
+					mergableTiles.append(matrix[row][col-1])
+					mergableNum += 1
+
+				#3 block merges
+				if elem == matrix[row+3][col] and matrix[row][col] != 195.0:
+					mergableTiles.append(matrix[row+1][col])
+					mergableNum += 1
+				if elem == matrix[row-3][col] and matrix[row][col] != 195.0:
+					mergableTiles.append(matrix[row-1][col])
+					mergableNum += 1
+				if elem == matrix[row][col+3] and matrix[row][col] != 195.0:
+					mergableTiles.append(matrix[row][col+1])
+					mergableNum += 1
+				if elem == matrix[row][col-3] and matrix[row][col] != 195.0:
+					mergableTiles.append(matrix[row][col-1])
+					mergableNum += 1
+
+			except:
+				print("")
+	print( mergableNum, mergableTiles )		
+
+def isGameOver():
+	return False
+	
+def gamePlay():
+	print("Game Starting ... ")
+	while True:
+		return False
+	
+'''
 TEST FUNCTIONS
 '''
 #presses random keys from the full key set array
@@ -123,17 +201,19 @@ def randomFullMoveSet():
 # also added extra functionality for a more optimal algorithm
 def randomOptimalMoveSet():
 	breakTime = 0.05
-	runTime = 1
+	runTime = 5
 	time.sleep(1)
 	for i in range(0, runTime):
 		time.sleep(breakTime)
 		pressKey(Key.up)
 		time.sleep(breakTime)
 		pressKey(Key.down)
+		ptuiPrintOut()
 		for i in range(0, 15):
 			time.sleep(breakTime)
 			idx = random.randint(0,1)
 			pressKey(optkeylst[idx])
+			ptuiPrintOut()
 
 '''
 MAIN
@@ -145,20 +225,20 @@ def main():
 
 	kb.press(Key.f11)
 	kb.release(Key.f11)
-
-	time.sleep(2)
-
-	print(ptuiPrintOut())
-	#time.sleep(5)
 	
-	#coordsColorPrintOut()
-	#randomOptimalMoveSet()
-	
-	killBrowser()
+	time.sleep(1.5)
 
-	#testing below
+	ma = coordsColorMatrix()
+	mergableTiles(ma)
 	
+	'''
+	TESTING BELOW
+	'''
+
 	#pixelAt(coordsdict.get("topCornerLeft")[0], coordsdict.get("topCornerLeft")[1])
+
+	#randomOptimalMoveSet()
+	killBrowser()
 	
 main()
 
