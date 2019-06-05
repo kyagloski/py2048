@@ -8,6 +8,11 @@ import webbrowser
 import gtk.gdk
 import sys
 
+
+
+'''
+STATE
+'''
 #keyboard
 kb = Controller()
 
@@ -56,6 +61,9 @@ colorsdict = {195:"0",
 			  60:"4096",
 			  60:"8192"}
 
+'''
+CORE FUNCTIONALITY
+'''
 #prints out formatted color value of each square
 def coordsColorPrintOut():
 	for i in coordsdict:
@@ -93,11 +101,6 @@ def ptuiPrintOut():
 		print("")
 	print("")
 
-def gamePlay():
-	print("Game Starting ... ")
-	while True:
-		return False	 
-
 #gets pixel at coordinate 
 # returns array of r, g, b color values 
 # converted to grayscale
@@ -119,6 +122,41 @@ def killBrowser():
 	kb.release(Key.ctrl)
 	kb.release('w')
 
+'''
+SOLVING ALGORITHMS
+'''
+def mergableTiles(matrix):
+	mergableNum = 0
+	mergableTiles = []
+	idx = 0
+	print(matrix)
+	for row in range(0, 4):
+		for col in range(0, 4):
+			try:
+				if col == matrix[row+1][col]:
+					mergableTiles.append(matrix[row+1][col])
+					mergableNum += 1
+				if col == matrix[row-1][col]:
+					mergableTiles.append(matrix[row-1][col])
+					mergableNum += 1
+				if col == matrix[row][col+1]:
+					mergableTiles.append(matrix[row][col+1])
+					mergableNum += 1
+				if col == matrix[row][col-1]:
+					mergableTiles.append(matrix[row][col-1])
+					mergableNum += 1
+			except:
+				print("e")
+	print( mergableNum, mergableTiles )		
+
+def isGameOver():
+	return False
+	
+def gamePlay():
+	print("Game Starting ... ")
+	while True:
+		return False
+	
 '''
 TEST FUNCTIONS
 '''
@@ -160,10 +198,9 @@ def main():
 	kb.release(Key.f11)
 	
 	time.sleep(1.5)
-	
-	ptuiPrintOut()
 
-	time.sleep(1.5)
+	ma = coordsColorMatrix()
+	mergableTiles(ma)
 	
 	'''
 	TESTING BELOW
