@@ -69,30 +69,35 @@ def pressKey(key):
 	kb.press(key)
 	kb.release(key)
 
-#adds current board colors 
-def coordsColorArray():
+#adds current board greyscale values 
+def coordsColorMatrix():
 	colorcords = []
-	for i in coordsdict:
-		colorcords.append(pixelAt(coordsdict.get(i)[0], coordsdict.get(i)[1]))
-	return colorcords	
+	idx = 0
+	for i in range(0, 4):
+		inner = []
+		for j in range(0, 4):
+			inner.append(pixelAt(coordsdict.get(coordsdict.keys()[idx])[0], coordsdict.get(coordsdict.keys()[idx])[1]))
+			idx += 1
+		colorcords.append(inner)
+	return colorcords
 
 #ASCII GUI to view what is happening
 # on the board as text output
 def ptuiPrintOut():
-	idxLow = 0
-	idxHigh = 4
-	ca = coordsColorArray()
-	for i in range(0, len(ca)):
-		for j in range(idxLow, idxHigh):
-			if ca[j] in colorsdict:
-				print(colorsdict.get(ca[j])),
-			else:
-				print("n/a"),
-		idxLow += 4
-		if (idxHigh + 4) <= len(ca):
-			idxHigh += 4
+	ca = coordsColorMatrix()
+	idx = 0
+	for r in range(0, 4):
+		for c in range(0, 4):
+			print(colorsdict.get(ca[r][c])),
+			idx += 1
 		print("")
-		
+	print("")
+
+def gamePlay():
+	print("Game Starting ... ")
+	while True:
+		return False	 
+
 #gets pixel at coordinate 
 # returns array of r, g, b color values 
 # converted to grayscale
@@ -129,17 +134,19 @@ def randomFullMoveSet():
 # also added extra functionality for a more optimal algorithm
 def randomOptimalMoveSet():
 	breakTime = 0.05
-	runTime = 1
+	runTime = 5
 	time.sleep(1)
 	for i in range(0, runTime):
 		time.sleep(breakTime)
 		pressKey(Key.up)
 		time.sleep(breakTime)
 		pressKey(Key.down)
+		ptuiPrintOut()
 		for i in range(0, 15):
 			time.sleep(breakTime)
 			idx = random.randint(0,1)
 			pressKey(optkeylst[idx])
+			ptuiPrintOut()
 
 '''
 MAIN
@@ -151,20 +158,21 @@ def main():
 
 	kb.press(Key.f11)
 	kb.release(Key.f11)
-
-	time.sleep(2)
-
+	
+	time.sleep(1.5)
+	
 	ptuiPrintOut()
-	#time.sleep(5)
-	
-	#coordsColorPrintOut()
-	#randomOptimalMoveSet()
-	
-	killBrowser()
 
-	#testing below
+	time.sleep(1.5)
 	
+	'''
+	TESTING BELOW
+	'''
+
 	#pixelAt(coordsdict.get("topCornerLeft")[0], coordsdict.get("topCornerLeft")[1])
+
+	#randomOptimalMoveSet()
+	killBrowser()
 	
 main()
 
