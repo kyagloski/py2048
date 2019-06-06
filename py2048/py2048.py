@@ -127,83 +127,81 @@ def mergableTiles(matrix):
 	mergableNum = 0
 	mergableTiles = []
 	print(matrix)
-	for row in range(0, 4):
-		for col in range(0, 4):
+	for row in range(0, 3):
+		for col in range(0, 3):
 			elem = matrix[row][col]
 			try:
-				
-				#1 block merges
+				#forwards
 				if elem == matrix[row+1][col] and matrix[row][col] != 195.0:
 					mergableTiles.append(matrix[row+1][col])
 					mergableNum += 1
+
+				elif elem == matrix[row+2][col] and matrix[row][col] != 195.0:
+					mergableTiles.append(matrix[row+2][col])
+					mergableNum += 1
+
+				elif elem == matrix[row+3][col] and matrix[row][col] != 195.0:
+					mergableTiles.append(matrix[row+3][col])
+					mergableNum += 1
+				else:
+					print(elem)
 			except:
-				print("")
+				print(elem, "1")
+
 			try:
+				#backwards
 				if elem == matrix[row-1][col] and matrix[row][col] != 195.0:
 					mergableTiles.append(matrix[row-1][col])
 					mergableNum += 1
+
+				elif elem == matrix[row-2][col] and matrix[row][col] != 195.0:
+					mergableTiles.append(matrix[row-2][col])
+					mergableNum += 1
+
+				elif elem == matrix[row-3][col] and matrix[row][col] != 195.0:
+					mergableTiles.append(matrix[row-3][col])
+					mergableNum += 1
+				else:
+					print(elem)
 			except:
-				print("")
+				print(elem, "2")
+
 			try:
+				#upwards
 				if elem == matrix[row][col+1] and matrix[row][col] != 195.0:
 					mergableTiles.append(matrix[row][col+1])
 					mergableNum += 1
+
+				elif elem == matrix[row][col+2] and matrix[row][col] != 195.0:
+					mergableTiles.append(matrix[row][col+2])
+					mergableNum += 1
+
+				elif elem == matrix[row][col+3] and matrix[row][col] != 195.0:
+					mergableTiles.append(matrix[row][col+3])
+					mergableNum += 1
+				else:
+					print(elem)
 			except:
-				print("")
+				print(elem, "3")
+
 			try:
+				#downwards
 				if elem == matrix[row][col-1] and matrix[row][col] != 195.0:
 					mergableTiles.append(matrix[row][col-1])
 					mergableNum += 1
-			except:
-				print("")
 
-				#2 block merges
-			try:
-				if elem == matrix[row+2][col] and matrix[row][col] != 195.0:
-					mergableTiles.append(matrix[row+2][col])
-					mergableNum += 1
-			except:
-				print("")
-			try:
-				if elem == matrix[row-2][col] and matrix[row][col] != 195.0:
-					mergableTiles.append(matrix[row-2][col])
-					mergableNum += 1
-			except:
-				print("")
-			try:
-				if elem == matrix[row][col+2] and matrix[row][col] != 195.0:
-					mergableTiles.append(matrix[row][col+2])
-					mergableNum += 1
-			except:
-				if elem == matrix[row][col-2] and matrix[row][col] != 195.0:
+				elif elem == matrix[row][col-2] and matrix[row][col] != 195.0:
 					mergableTiles.append(matrix[row][col-2])
 					mergableNum += 1
 
-				#3 block merges
-			try:
-				if elem == matrix[row+3][col] and matrix[row][col] != 195.0:
-					mergableTiles.append(matrix[row+3][col])
-					mergableNum += 1
-			except:
-				print("")
-			try:
-				if elem == matrix[row-3][col] and matrix[row][col] != 195.0:
-					mergableTiles.append(matrix[row-3][col])
-					mergableNum += 1
-			except:
-				print("")
-			try:
-				if elem == matrix[row][col+3] and matrix[row][col] != 195.0:
-					mergableTiles.append(matrix[row][col+3])
-					mergableNum += 1
-			except:
-				print("")
-			try:
-				if elem == matrix[row][col-3] and matrix[row][col] != 195.0:
+				elif elem == matrix[row][col-3] and matrix[row][col] != 195.0:
 					mergableTiles.append(matrix[row][col-3])
 					mergableNum += 1
+				else:
+					print(elem)
 			except:
 				print("")
+
 	print( mergableNum, mergableTiles )		
 
 def isGameOver():
