@@ -129,51 +129,79 @@ def mergableTiles(matrix):
 	print(matrix)
 	for row in range(0, 4):
 		for col in range(0, 4):
+			elem = matrix[row][col]
 			try:
-				elem = matrix[row][col]
 				
 				#1 block merges
 				if elem == matrix[row+1][col] and matrix[row][col] != 195.0:
 					mergableTiles.append(matrix[row+1][col])
 					mergableNum += 1
+			except:
+				print("")
+			try:
 				if elem == matrix[row-1][col] and matrix[row][col] != 195.0:
 					mergableTiles.append(matrix[row-1][col])
 					mergableNum += 1
+			except:
+				print("")
+			try:
 				if elem == matrix[row][col+1] and matrix[row][col] != 195.0:
 					mergableTiles.append(matrix[row][col+1])
 					mergableNum += 1
+			except:
+				print("")
+			try:
 				if elem == matrix[row][col-1] and matrix[row][col] != 195.0:
 					mergableTiles.append(matrix[row][col-1])
 					mergableNum += 1
+			except:
+				print("")
 
 				#2 block merges
+			try:
 				if elem == matrix[row+2][col] and matrix[row][col] != 195.0:
-					mergableTiles.append(matrix[row+1][col])
+					mergableTiles.append(matrix[row+2][col])
 					mergableNum += 1
+			except:
+				print("")
+			try:
 				if elem == matrix[row-2][col] and matrix[row][col] != 195.0:
-					mergableTiles.append(matrix[row-1][col])
+					mergableTiles.append(matrix[row-2][col])
 					mergableNum += 1
+			except:
+				print("")
+			try:
 				if elem == matrix[row][col+2] and matrix[row][col] != 195.0:
-					mergableTiles.append(matrix[row][col+1])
+					mergableTiles.append(matrix[row][col+2])
 					mergableNum += 1
+			except:
 				if elem == matrix[row][col-2] and matrix[row][col] != 195.0:
-					mergableTiles.append(matrix[row][col-1])
+					mergableTiles.append(matrix[row][col-2])
 					mergableNum += 1
 
 				#3 block merges
+			try:
 				if elem == matrix[row+3][col] and matrix[row][col] != 195.0:
-					mergableTiles.append(matrix[row+1][col])
+					mergableTiles.append(matrix[row+3][col])
 					mergableNum += 1
+			except:
+				print("")
+			try:
 				if elem == matrix[row-3][col] and matrix[row][col] != 195.0:
-					mergableTiles.append(matrix[row-1][col])
+					mergableTiles.append(matrix[row-3][col])
 					mergableNum += 1
+			except:
+				print("")
+			try:
 				if elem == matrix[row][col+3] and matrix[row][col] != 195.0:
-					mergableTiles.append(matrix[row][col+1])
+					mergableTiles.append(matrix[row][col+3])
 					mergableNum += 1
+			except:
+				print("")
+			try:
 				if elem == matrix[row][col-3] and matrix[row][col] != 195.0:
-					mergableTiles.append(matrix[row][col-1])
+					mergableTiles.append(matrix[row][col-3])
 					mergableNum += 1
-
 			except:
 				print("")
 	print( mergableNum, mergableTiles )		
@@ -227,10 +255,10 @@ def main():
 	kb.release(Key.f11)
 	
 	time.sleep(1.5)
-
+	ptuiPrintOut()
 	ma = coordsColorMatrix()
 	mergableTiles(ma)
-	
+		
 	'''
 	TESTING BELOW
 	'''
@@ -238,7 +266,7 @@ def main():
 	#pixelAt(coordsdict.get("topCornerLeft")[0], coordsdict.get("topCornerLeft")[1])
 
 	#randomOptimalMoveSet()
-	killBrowser()
+	#killBrowser()
 	
 main()
 
