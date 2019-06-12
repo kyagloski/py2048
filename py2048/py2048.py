@@ -142,20 +142,16 @@ def checkForwards(matrix, row, col):
 				if elem == matrix[row][col+3] and matrix[row][col+3] != 195.0:
 					mergableTiles.append(matrix[row][col+3])
 					mergableNum += 1
-				else:
-					print(elem)
-			else:
-				print(elem)
-		else:
-			print(elem)
 	except:
-		print(elem, "1")
+		print(elem, "forwards idx")
 	return mergableNum, mergableTiles
 
 def checkBackwards(matrix, row, col):
 	mergableNum = 0
 	mergableTiles = []
 	elem = matrix[row][col]
+	if col == 0:
+		return 0, []
 	try:
 	#backwards
 		if elem == matrix[row][col-1] and matrix[row][col-1] != 195.0:
@@ -169,20 +165,16 @@ def checkBackwards(matrix, row, col):
 				if elem == matrix[row][col-3] and matrix[row][col-3] != 195.0:
 					mergableTiles.append(matrix[row][col-3])
 					mergableNum += 1
-				else:
-					print(elem)
-			else:
-				print(elem)
-		else:
-			print(elem)
 	except:
-		print(elem, "2")
+		print(elem, "backwards idx")
 	return mergableNum, mergableTiles
 
 def checkUpwards(matrix, row, col):
 	mergableNum = 0
 	mergableTiles = []
 	elem = matrix[row][col]
+	if row == 0:
+		return 0, []
 	try:
 	#upwards
 		if elem == matrix[row+1][col] and matrix[row+1][col] != 195.0:
@@ -196,14 +188,8 @@ def checkUpwards(matrix, row, col):
 				if elem == matrix[row+3][col] and matrix[row+3][col] != 195.0:
 					mergableTiles.append(matrix[row+3][col])
 					mergableNum += 1
-				else:
-					print(elem)
-			else:
-				print(elem)
-		else:
-			print(elem)
 	except:
-		print(elem, "3")
+		print(elem, "upwards idx")
 	return mergableNum, mergableTiles
 
 def checkDownwards(matrix, row, col):
@@ -223,24 +209,15 @@ def checkDownwards(matrix, row, col):
 				if elem == matrix[row-3][col] and matrix[row-3][col] != 195.0:
 					mergableTiles.append(matrix[row-3][col])
 					mergableNum += 1
-				else:
-					print(elem)
-			else:
-				print(elem)
-		else:
-			print(elem)
 	except:
-		print(elem, "4")
+		print(elem, "downwards idx")
 	return mergableNum, mergableTiles
 
 def mergableTiles(matrix):
-	'''
-	filter indexes at the start of every function to make sure its not out of bounds
-	'''
 	mergableNum = 0
 	mergableTiles = []
-	for row in range(1, 4):
-		for col in range(1, 4):
+	for col in range(0, 3):
+		for row in range(0, 3):
 			TEMPmergableNum, TEMPmergableTiles = checkForwards(matrix, row, col)
 			if TEMPmergableNum != 0:
 				mergableNum += TEMPmergableNum
@@ -257,7 +234,6 @@ def mergableTiles(matrix):
 			if TEMPmergableNum != 0:
 				mergableNum += TEMPmergableNum
 				mergableTiles.append(TEMPmergableTiles)
-	
 	print( mergableNum, mergableTiles )		
 
 def isGameOver():
