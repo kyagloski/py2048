@@ -226,7 +226,7 @@ def checkDownwards(matrix, row, col):
 	mergableTiles = []
 	elem = matrix[row][col]
 	print(row, col)
-	if row == 3:
+	if col == 3:
 		print("no merge")
 		return mergableNum, mergableTiles
 	try:
