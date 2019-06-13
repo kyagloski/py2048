@@ -15,6 +15,10 @@ STATE
 #keyboard
 kb = Controller()
 
+#state that determines if game has ended
+gameOverCoord = [632, 415]
+gameOverColor = 175.0
+
 #list of all possible moves
 keylst = [Key.left, Key.right, Key.up, Key.down]
 
@@ -276,12 +280,16 @@ def mergableTiles(matrix):
 				mergableTiles.append(TEMPmergableTiles)
 	print( mergableNum, mergableTiles )		
 
+#determines if the game has ended
 def isGameOver():
+	if pixelAt(gameOverCoord[0], gameOverCoord[1]) == gameOverColor:
+		return True
 	return False
 	
 def gamePlay():
 	print("Game Starting ... ")
 	while True:
+		time.sleep(0.15)
 		return False
 	
 '''
@@ -317,21 +325,22 @@ def randomOptimalMoveSet():
 MAIN
 '''
 def main():
-	url = "http://2048game.com/"
-	wb = webbrowser.get("google-chrome")
-	wb.open(url, 1, True)
+	#url = "http://2048game.com/"
+	#wb = webbrowser.get("google-chrome")
+	#wb.open(url, 1, True)
 
-	kb.press(Key.f11)
-	kb.release(Key.f11)
+	#kb.press(Key.f11)
+	#kb.release(Key.f11)
 	
 	time.sleep(1.5)
-	ptuiPrintOut()
-	ma = coordsColorMatrix()
-	mergableTiles(ma)
 		
 	'''
 	TESTING BELOW
 	'''
+
+	#ptuiPrintOut()
+	#ma = coordsColorMatrix()
+	#mergableTiles(ma)
 
 	#pixelAt(coordsdict.get("topCornerLeft")[0], coordsdict.get("topCornerLeft")[1])
 
