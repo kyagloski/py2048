@@ -3,6 +3,9 @@
 
 from pynput.keyboard import Key, Controller
 from collections import OrderedDict
+from bs4 import BeautifulSoup
+from selenium import webdriver
+import requests
 import time
 import random
 import webbrowser
@@ -133,164 +136,176 @@ def checkForwards(matrix, row, col):
 	mergableNum = 0
 	mergableTiles = []
 	elem = matrix[row][col]
-	print(row, col)
+	#print(row, col)
 	if col == 3:
-		print("no merge")
+		#print("no merge")
 		return mergableNum, mergableTiles
 	try:
 	#forwards
 		if elem == matrix[row][col+1] and matrix[row][col+1] != 195.0:
 			mergableTiles.append(matrix[row][col+1])
 			mergableNum += 1
-			print("merge found f + 1")
+			#print("merge found f + 1")
 			return mergableNum, mergableTiles
 		elif matrix[row][col+1] == 195.0:
 			if elem == matrix[row][col+2] and matrix[row][col+2] != 195.0:
 				mergableTiles.append(matrix[row][col+2])
 				mergableNum += 1
-				print("merge found f + 2")
+				#print("merge found f + 2")
 				return mergableNum, mergableTiles
 			elif matrix[row][col+2] == 195.0:
 				if elem == matrix[row][col+3] and matrix[row][col+3] != 195.0:
 					mergableTiles.append(matrix[row][col+3])
 					mergableNum += 1
-					print("merge found f + 3")
+					#print("merge found f + 3")
 					return mergableNum, mergableTiles
 	except:
-		print(elem, "forwards idx")
-	print("no merge")
+		pass
+		#print(elem, "forwards idx")
+	#print("no merge")
 	return mergableNum, mergableTiles
 
 def checkBackwards(matrix, row, col):
 	mergableNum = 0
 	mergableTiles = []
 	elem = matrix[row][col]
-	print(row, col)
+	#print(row, col)
 	if col == 0:
-		print("no merge")
+		#print("no merge")
 		return mergableNum, mergableTiles
 	try:
 	#backwards
 		if elem == matrix[row][col-1] and matrix[row][col-1] != 195.0:
 			mergableTiles.append(matrix[row][col-1])
 			mergableNum += 1
-			print("merge found b - 1")
+			#print("merge found b - 1")
 			return mergableNum, mergableTiles
 		elif matrix[row][col-1] == 195.0 and col - 2 >= 0:
 			if elem == matrix[row][col-2] and matrix[row][col-2] != 195.0:
 				mergableTiles.append(matrix[row][col-2])
 				mergableNum += 1
-				print("merge found b - 2")
+				#print("merge found b - 2")
 				return mergableNum, mergableTiles
 			elif matrix[row][col-2] == 195.0 and col - 3 >= 0:
 				if elem == matrix[row][col-3] and matrix[row][col-3] != 195.0:
 					mergableTiles.append(matrix[row][col-3])
 					mergableNum += 1
-					print("merge found b - 3")
+					#print("merge found b - 3")
 					return mergableNum, mergableTiles
 	except:
-		print(elem, "backwards idx")
-	print("no merge")
+		pass
+		#print(elem, "backwards idx")
+	#print("no merge")
 	return mergableNum, mergableTiles
 
 def checkUpwards(matrix, row, col):
 	mergableNum = 0
 	mergableTiles = []
 	elem = matrix[row][col]
-	print(row, col)
+	#print(row, col)
 	if row == 0:
-		print("no merge")
+		#print("no merge")
 		return mergableNum, mergableTiles
 	try:
 	#upwards
 		if elem == matrix[row-1][col] and matrix[row-1][col] != 195.0:
 			mergableTiles.append(matrix[row-1][col])
 			mergableNum += 1
-			print("merge found u - 1")
+			#print("merge found u - 1")
 			return mergableNum, mergableTiles
 		elif matrix[row-1][col] == 195.0 and row - 2 >= 0:
 			if elem == matrix[row-2][col] and matrix[row-2][col] != 195.0:
 				mergableTiles.append(matrix[row-2][col])
 				mergableNum += 1
-				print("merge found u - 2")
+				#print("merge found u - 2")
 				return mergableNum, mergableTiles
 			elif matrix[row-2][col] == 195.0 and row - 3 >= 0:
 				if elem == matrix[row-3][col] and matrix[row-3][col] != 195.0:
 					mergableTiles.append(matrix[row-3][col])
 					mergableNum += 1
-					print("merge found u - 3")
+					#print("merge found u - 3")
 					return mergableNum, mergableTiles
 	except:
-		print(elem, "upwards idx")
-	print("no merge")
+		pass
+		#print(elem, "upwards idx")
+	#print("no merge")
 	return mergableNum, mergableTiles
 
 def checkDownwards(matrix, row, col):
 	mergableNum = 0
 	mergableTiles = []
 	elem = matrix[row][col]
-	print(row, col)
+	#print(row, col)
 	if row == 3:
-		print("no merge")
+		#print("no merge")
 		return mergableNum, mergableTiles
 	try:
 	#downwards
 		if elem == matrix[row+1][col] and matrix[row+1][col] != 195.0:
 			mergableTiles.append(matrix[row+1][col])
 			mergableNum += 1
-			print("merge found d + 1")
+			#print("merge found d + 1")
 			return mergableNum, mergableTiles
 		elif matrix[row+1][col] == 195.0:
 			if elem == matrix[row+2][col] and matrix[row+2][col] != 195.0:
 				mergableTiles.append(matrix[row+2][col])
 				mergableNum += 1
-				print("merge found d + 2")
+				#print("merge found d + 2")
 				return mergableNum, mergableTiles
 			elif matrix[row+2][col] == 195.0:
 				if elem == matrix[row+3][col] and matrix[row+3][col] != 195.0:
 					mergableTiles.append(matrix[row+3][col])
 					mergableNum += 1
-					print("merge found d + 3")
+					#print("merge found d + 3")
 					return mergableNum, mergableTiles
 	except:
-		print(elem, "downwards idx")
-	print("no merge")
+		pass
+		#print(elem, "downwards idx")
+	#print("no merge")
 	return mergableNum, mergableTiles
 
 def mergableTiles(matrix):
-	mergableNum = 0
 	mergableTiles = []
+	forwardMerges = 0
+	backwardMerges = 0
+	upMerges = 0
+	downMerges = 0
 	for col in range(0, 4):
 		for row in range(0, 4):
-			TEMPmergableNum, TEMPmergableTiles = checkForwards(matrix, row, col)
-			if TEMPmergableNum != 0:
-				mergableNum += TEMPmergableNum
-				mergableTiles.append(TEMPmergableTiles)
-			TEMPmergableNum, TEMPmergableTiles = checkBackwards(matrix, row, col)
-			if TEMPmergableNum != 0:
-				mergableNum += TEMPmergableNum
-				mergableTiles.append(TEMPmergableTiles)
-			TEMPmergableNum, TEMPmergableTiles = checkUpwards(matrix, row, col)
-			if TEMPmergableNum != 0:
-				mergableNum += TEMPmergableNum
-				mergableTiles.append(TEMPmergableTiles)
-			TEMPmergableNum, TEMPmergableTiles = checkDownwards(matrix, row, col)
-			if TEMPmergableNum != 0:
-				mergableNum += TEMPmergableNum
-				mergableTiles.append(TEMPmergableTiles)
-	print( mergableNum, mergableTiles )		
+			if matrix[row][col] != 195.0:
+				TEMPmergableNum, TEMPmergableTiles = checkForwards(matrix, row, col)
+				if TEMPmergableNum != 0:
+					forwardMerges += TEMPmergableNum
+					mergableTiles.append(TEMPmergableTiles)
+				TEMPmergableNum, TEMPmergableTiles = checkBackwards(matrix, row, col)
+				if TEMPmergableNum != 0:
+					backwardMerges += TEMPmergableNum
+					mergableTiles.append(TEMPmergableTiles)
+				TEMPmergableNum, TEMPmergableTiles = checkUpwards(matrix, row, col)
+				if TEMPmergableNum != 0:
+					upMerges += TEMPmergableNum
+					mergableTiles.append(TEMPmergableTiles)
+				TEMPmergableNum, TEMPmergableTiles = checkDownwards(matrix, row, col)
+				if TEMPmergableNum != 0:
+					downMerges += TEMPmergableNum
+					mergableTiles.append(TEMPmergableTiles)
+	print( "forwards : ", forwardMerges)
+	print( "backwards : ", backwardMerges)
+	print( "upwards : ", upMerges)
+	print( "downwards : ", downMerges)
+	print( mergableTiles )		
 
 #determines if the game has ended
 def isGameOver():
 	if pixelAt(gameOverCoord[0], gameOverCoord[1]) == gameOverColor:
+		print("!!GAME OVER!!")
 		return True
 	return False
 	
 def gamePlay():
 	print("Game Starting ... ")
-	while True:
-		time.sleep(0.15)
-		return False
+	while isGameOver == False:
+		return 0
 	
 '''
 TEST FUNCTIONS
@@ -306,46 +321,57 @@ def randomFullMoveSet():
 #presses random keys from the optimal key set array,
 # also added extra functionality for a more optimal algorithm
 def randomOptimalMoveSet():
-	breakTime = 0.05
-	runTime = 5
+	timeerwerwer = 0
+	breakTime = 0.0
+	runTime = 10000
 	time.sleep(1)
 	for i in range(0, runTime):
 		time.sleep(breakTime)
 		pressKey(Key.up)
 		time.sleep(breakTime)
 		pressKey(Key.down)
-		ptuiPrintOut()
+		#ptuiPrintOut()
+		ma = coordsColorMatrix()
+		mergableTiles(ma)
+		print("")
+		if isGameOver() == True:
+			pressKey('r')
+			timeerwerwer += 1
+			print(timeerwerwer)
 		for i in range(0, 15):
 			time.sleep(breakTime)
 			idx = random.randint(0,1)
 			pressKey(optkeylst[idx])
-			ptuiPrintOut()
+			#ptuiPrintOut()
+			ma = coordsColorMatrix()
+			mergableTiles(ma)
+			print("")
+			if isGameOver():
+				pressKey('r')
+				timeerwerwer += 1
+				print(timeerwerwer)
 
 '''
 MAIN
 '''
 def main():
-	#url = "http://2048game.com/"
-	#wb = webbrowser.get("google-chrome")
-	#wb.open(url, 1, True)
 
-	#kb.press(Key.f11)
-	#kb.release(Key.f11)
+	url = "http://2048game.com/"
+
+	wb = webbrowser.get("google-chrome")
+	wb.open(url, 1, True)
+
+	kb.press(Key.f11)
+	kb.release(Key.f11)
 	
 	time.sleep(1.5)
-		
 	'''
 	TESTING BELOW
 	'''
-
-	#ptuiPrintOut()
-	#ma = coordsColorMatrix()
-	#mergableTiles(ma)
-
-	#pixelAt(coordsdict.get("topCornerLeft")[0], coordsdict.get("topCornerLeft")[1])
-
-	#randomOptimalMoveSet()
-	#killBrowser()
 	
-main()
+	randomOptimalMoveSet()
+	killBrowser()
+
+if __name__ == '__main__':
+	main()
 
