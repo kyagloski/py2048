@@ -3,9 +3,6 @@
 
 from pynput.keyboard import Key, Controller
 from collections import OrderedDict
-from bs4 import BeautifulSoup
-from selenium import webdriver
-import requests
 import time
 import random
 import webbrowser
@@ -265,47 +262,79 @@ def checkDownwards(matrix, row, col):
 	return mergableNum, mergableTiles
 
 def mergableTiles(matrix):
-	mergableTiles = []
+	forwardList = []
+	backwardList = []
+	upwardList = []
+	downwardList = []
+	
 	forwardMerges = 0
 	backwardMerges = 0
-	upMerges = 0
-	downMerges = 0
+	upwardMerges = 0
+	downwardMerges = 0
 	for col in range(0, 4):
 		for row in range(0, 4):
 			if matrix[row][col] != 195.0:
 				TEMPmergableNum, TEMPmergableTiles = checkForwards(matrix, row, col)
 				if TEMPmergableNum != 0:
 					forwardMerges += TEMPmergableNum
-					mergableTiles.append(TEMPmergableTiles)
+					forwardList.append(TEMPmergableTiles)
 				TEMPmergableNum, TEMPmergableTiles = checkBackwards(matrix, row, col)
 				if TEMPmergableNum != 0:
 					backwardMerges += TEMPmergableNum
-					mergableTiles.append(TEMPmergableTiles)
+					backwardList.append(TEMPmergableTiles)
 				TEMPmergableNum, TEMPmergableTiles = checkUpwards(matrix, row, col)
 				if TEMPmergableNum != 0:
-					upMerges += TEMPmergableNum
-					mergableTiles.append(TEMPmergableTiles)
+					upwardMerges += TEMPmergableNum
+					upwardList.append(TEMPmergableTiles)
 				TEMPmergableNum, TEMPmergableTiles = checkDownwards(matrix, row, col)
 				if TEMPmergableNum != 0:
-					downMerges += TEMPmergableNum
-					mergableTiles.append(TEMPmergableTiles)
-	print( "forwards : ", forwardMerges)
-	print( "backwards : ", backwardMerges)
-	print( "upwards : ", upMerges)
-	print( "downwards : ", downMerges)
-	print( mergableTiles )		
+					downwardMerges += TEMPmergableNum
+					downwardList.append(TEMPmergableTiles)
+	#print( "forwards : ", forwardMerges)
+	#print( "backwards : ", backwardMerges)
+	#print( "upwards : ", upMerges)
+	#print( "downwards : ", downMerges)
+	#print( mergableTiles )
+	return forwardList, backwardList, upwardList, downwardList, forwardMerges, backwardMerges, upwardMerges, downwardMerges 
+
 
 #determines if the game has ended
 def isGameOver():
 	if pixelAt(gameOverCoord[0], gameOverCoord[1]) == gameOverColor:
-		print("!!GAME OVER!!")
+		print("GAME OVER!!")
 		return True
 	return False
 	
 def gamePlay():
 	print("Game Starting ... ")
 	while isGameOver == False:
-		return 0
+		ma = coordsColorMatrix()
+		mergeList = []
+		directionList = []
+		forwardList, backwardList, upwardList, downwardList, forwardMerges, backwardMerges, upwardMerges, downwardMerges  = mergableTiles(ma)
+		mergeList.append(forwardList)
+		mergeList.append(backwardList)
+		mergeList.append(upwardList)
+		mergeList.append(downwardList)
+		directionList.append(forwardList)
+		directionList.append(backwardList)
+		directionList.append(upwardList)
+		directionList.append(downwardList)
+
+		mergeAmount = 0
+		largestMerge = "0"
+
+		for merge in mergeAmount:
+			if merge > mergeAmount:
+				mergeAmount = merge
+
+		for lst in mergeList:
+			for elem in lst:
+				if int(colorsdict.get(elem)) > int(largestMerge):
+					largestMerge = colorsdict.get(elem)
+
+		
+
 	
 '''
 TEST FUNCTIONS
@@ -369,7 +398,7 @@ def main():
 	TESTING BELOW
 	'''
 	
-	randomOptimalMoveSet()
+	#randomOptimalMoveSet()
 	killBrowser()
 
 if __name__ == '__main__':
