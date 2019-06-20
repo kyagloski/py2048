@@ -201,19 +201,19 @@ def mergableTiles(matrix):
 					TEMPmergableNum, TEMPmergableTiles = checkForwards(matrix, row, col)
 					if TEMPmergableNum != 0:
 						forwardMerges += TEMPmergableNum
-						forwardList.append(TEMPmergableTiles)
+						forwardList = TEMPmergableTiles
 					TEMPmergableNum, TEMPmergableTiles = checkBackwards(matrix, row, col)
 					if TEMPmergableNum != 0:
 						backwardMerges += TEMPmergableNum
-						backwardList.append(TEMPmergableTiles)
+						backwardList = TEMPmergableTiles
 					TEMPmergableNum, TEMPmergableTiles = checkUpwards(matrix, row, col)
 					if TEMPmergableNum != 0:
 						upwardMerges += TEMPmergableNum
-						upwardList.append(TEMPmergableTiles)
+						upwardList = TEMPmergableTiles
 					TEMPmergableNum, TEMPmergableTiles = checkDownwards(matrix, row, col)
 					if TEMPmergableNum != 0:
 						downwardMerges += TEMPmergableNum
-						downwardList.append(TEMPmergableTiles)
+						downwardList = TEMPmergableTiles
 			except:
 				pass
 	return forwardList, backwardList, upwardList, downwardList, forwardMerges, backwardMerges, upwardMerges, downwardMerges 
@@ -227,7 +227,7 @@ def isGameOver(string):
 
 def gamePlay(driver):
 	gameovers = 0
-	breakTime = 0.1
+	breakTime = 0.5
 	print("Game Starting ... ")
 	string = getData(driver)
 	while isGameOver(string) == False:
