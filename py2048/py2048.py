@@ -227,9 +227,10 @@ def isGameOver(string):
 
 def gamePlay(driver):
 	gameovers = 0
-	breakTime = 0.5
+	breakTime = 0.1
 	print("Game Starting ... ")
 	string = getData(driver)
+	previousMatrix = [[]]
 	while isGameOver(string) == False:
 		string = getData(driver)
 		matrix = buildDataMatrix(string)
@@ -297,6 +298,16 @@ def gamePlay(driver):
 		else:
 			time.sleep(breakTime)
 			pressKey(Key.up)
+			if previousMatrix == matrix:
+				pressKey(Key.left)
+				if previousMatrix == matrix:
+					pressKey(Key.right)
+		previousMatrix = matrix
+	string = getData(driver)
+	if isGameOver(string) == True:
+		driver = webdriver.Chrome(executable_path=r"/home/kyle/gitrepos/py2048/chromedriver")
+		driver.get(url)
+		gamePlay(driver)
 
 '''
 TEST FUNCTIONS
