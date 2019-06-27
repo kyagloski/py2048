@@ -12,6 +12,8 @@ STATE
 #keyboard
 kb = Controller()
 
+chromePath = "/home/kyle/gitrepos/py2048/chromedriver"
+
 #list of all possible moves
 keylst = [Key.left, Key.right, Key.up, Key.down]
 
@@ -20,6 +22,7 @@ optkeylst = [Key.left, Key.down]
 
 #url containing game
 url = 'http://2048game.com/'
+#url = 'https://hczhcz.github.io/2048/20ez/'
 
 #script that grabs storage to be run in the driver
 scriptArray = """localStorage.setItem("key1", 'new item');
@@ -35,6 +38,13 @@ CORE FUNCTIONALITY
 def pressKey(key):
 	kb.press(key)
 	kb.release(key)
+
+#presses keys ctrl + w to close the tab of the browser
+def killBrowser():
+	kb.press(Key.ctrl)
+	kb.press('w')
+	kb.release(Key.ctrl)
+	kb.release('w')
 
 #grabs board data
 def getData(driver):
@@ -183,6 +193,18 @@ def checkDownwards(matrix, row, col):
 		pass
 	return mergableNum, mergableTiles
 
+def checkDiagonal(matrix):
+	diagonalMerge = 0
+	for col in range(0, 4):
+		for row in range(0, 4):
+			try:
+				if matrix[row-1][col-1] == matrix[row][col]:
+					diagonalMerge += 1
+			except:
+				pass
+	return diagonalMerge
+				
+
 #calculates currently available merge directions and mergable blocks
 def mergableTiles(matrix):
 	forwardList = []
@@ -221,13 +243,13 @@ def mergableTiles(matrix):
 #determines if game has ended
 def isGameOver(string):
 	if string == "second item":
-		print("Game Over!!")
 		return True
 	return False
 
 def gamePlay(driver):
 	gameovers = 0
-	breakTime = 0.1
+	breakTime = 0.05
+	enumerator = 0
 	print("Game Starting ... ")
 	string = getData(driver)
 	previousMatrix = [[]]
@@ -238,6 +260,7 @@ def gamePlay(driver):
 		mergeList = []
 		directionList = []
 		forwardList, backwardList, upwardList, downwardList, forwardMerges, backwardMerges, upwardMerges, downwardMerges  = mergableTiles(matrix)
+		diagonalMerge = checkDiagonal(matrix)
 		mergeList.append(forwardMerges)
 		mergeList.append(backwardMerges)
 		mergeList.append(upwardMerges)
@@ -265,24 +288,10 @@ def gamePlay(driver):
 				if elem > largestMergeElem:
 					largestMergeElem = elem
 					elemDirection = idx
-
 		if largestMergeElem == 0 and largestMergeAmount == 0:
 			time.sleep(breakTime)
 			pressKey(Key.up)
-		if largestMergeElem > largestMergeAmount:
-			if elemDirection == 0:
-				time.sleep(breakTime)
-				pressKey(Key.right)
-			elif elemDirection == 1:
-				time.sleep(breakTime)
-				pressKey(Key.left)
-			elif elemDirection == 2:
-				time.sleep(breakTime)
-				pressKey(Key.up)
-			elif elemDirection == 3:
-				time.sleep(breakTime)
-				pressKey(Key.down)
-		elif largestMergeAmount > largestMergeElem:
+		if largestMergeAmount > largestMergeElem:
 			if amountDirection == 0:
 				time.sleep(breakTime)
 				pressKey(Key.right)
@@ -295,17 +304,53 @@ def gamePlay(driver):
 			elif amountDirection == 3:
 				time.sleep(breakTime)
 				pressKey(Key.down)
-		else:
+		elif largestMergeElem > largestMergeAmount:
+			if elemDirection == 0:
+				time.sleep(breakTime)
+				pressKey(Key.right)
+			elif elemDirection == 1:
+				time.sleep(breakTime)
+				pressKey(Key.left)
+			elif elemDirection == 2:
+				time.sleep(breakTime)
+				pressKey(Key.up)
+			elif elemDirection == 3:
+				time.sleep(breakTime)
+				pressKey(Key.down)
+		if diagonalMerge >= 6 and matrix[0][3] >= 128 and matrix[0][0] != 0:
+			print(diagonalMerge, "diagonal merging ...")
+			time.sleep(breakTime)
+			#pressKey(Key.left)
+			time.sleep(breakTime)
+			#pressKey(Key.up)
+		if previousMatrix == matrix:
 			time.sleep(breakTime)
 			pressKey(Key.up)
+			previousMatrix = matrix
+			string = getData(driver)
+			matrix = buildDataMatrix(string)
 			if previousMatrix == matrix:
-				pressKey(Key.left)
-				if previousMatrix == matrix:
-					pressKey(Key.right)
+				time.sleep(breakTime)
+				pressKey(Key.right)
+				previousMatrix = matrix
+				string = getData(driver)
+				matrix = buildDataMatrix(string)
+				if previousMatrix == matrix and matrix[0][0] != 0:
+					time.sleep(breakTime)
+					pressKey(Key.left)
+					previousMatrix = matrix
+					string = getData(driver)
+					matrix = buildDataMatrix(string)
+				elif previousMatrix == matrix:
+					time.sleep(breakTime)
+					pressKey(Key.down)
 		previousMatrix = matrix
+		enumerator += 1
 	string = getData(driver)
 	if isGameOver(string) == True:
-		driver = webdriver.Chrome(executable_path=r"/home/kyle/gitrepos/py2048/chromedriver")
+		print("Game Over!!")
+		killBrowser()
+		driver = webdriver.Chrome(executable_path=r"" + chromePath)
 		driver.get(url)
 		gamePlay(driver)
 
@@ -362,7 +407,7 @@ MAIN
 '''
 def main():
 	
-	driver = webdriver.Chrome(executable_path=r"/home/kyle/gitrepos/py2048/chromedriver")
+	driver = webdriver.Chrome(executable_path=r"" + chromePath)
 	driver.get(url)
 	#print(getData(driver))
 	#randomOptimalMoveSet(driver)
