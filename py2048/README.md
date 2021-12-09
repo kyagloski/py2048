@@ -1,7 +1,4 @@
 # py2048
-python 2048 automator
+attempted python 2048 automator
 
-EDIT #1
-
-early alpha stages. This only currently functions on
-one specific machine.
+one of my very first code projects
